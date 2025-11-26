@@ -23,7 +23,7 @@ pub fn main() !void {
 
     const iterable = ByteArrayListCtx.init(al);
     const iter = Iter(ByteArrayListCtx).init(iterable);
-    var map = iter.map(add_1).map(add_1);
+    var map = iter.map(add_1).map(add_1).take(2);
 
     while (map.next()) |entry| {
         print("{d}", .{entry});
