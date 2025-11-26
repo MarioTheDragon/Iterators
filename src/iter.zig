@@ -36,12 +36,11 @@ fn Map(data_type: type, f_type: type) type {
 fn Take(data_type: type) type {
     return struct {
         data: data_type,
-        current_idx: usize = 0,
         n: usize,
 
         fn next(self: *@This()) ?u8 {
-            if (self.current_idx == self.n) return null;
-            self.current_idx += 1;
+            if (self.n == 0) return null;
+            self.n -= 1;
             return self.data.next();
         }
     };
