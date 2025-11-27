@@ -12,21 +12,6 @@ fn add_1(a: u8) u8 {
     return a + 1;
 }
 
-fn i(a: type) type {
-    return @typeInfo(a).@"fn".return_type.?;
-}
-
-fn x(a: anytype) i(@TypeOf(a)) {
-    return a();
-}
-
-fn y() void {
-    print("hi", .{});
-}
-fn z() u32 {
-    return 5;
-}
-
 pub fn main() !void {
     var al: ByteArrayList = ByteArrayList.init(allocator);
     defer al.deinit();
@@ -38,15 +23,9 @@ pub fn main() !void {
 
     const iterable = ByteArrayListCtx.init(al);
     const iter = Iter(ByteArrayListCtx).init(iterable);
-    // var map = iter.map(add_1).map(add_1).take(2);
-
-    var map = iter.take(2).map(add_1);
+    var map = iter.map(add_1).map(add_1).take(2);
 
     while (map.next()) |entry| {
         print("{d}", .{entry});
     }
-
-    const g = z;
-    x(y);
-    _ = x(g);
 }
