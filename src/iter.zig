@@ -61,7 +61,7 @@ pub fn Iter(ctx_t: type) type {
     return struct {
         ctx: ctx_t,
 
-        pub fn init(data: ByteArrayListCtx) @This() {
+        pub fn init(data: ctx_t) @This() {
             return .{ .ctx = data };
         }
 
