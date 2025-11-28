@@ -5,7 +5,7 @@ const allocator = std.testing.allocator;
 const expect = std.testing.expect;
 const test_utils = @import("test_utils.zig");
 
-const ByteArrayListCtx = @import("base_contexts.zig").ByteArrayListCtx;
+const ArrayListCtx = @import("base_contexts.zig").ArrayListCtx;
 const Iter = @import("iter.zig").Iter;
 
 test "basic" {
@@ -16,8 +16,8 @@ test "basic" {
     try al.append(2);
     try al.append(3);
 
-    const iterable = ByteArrayListCtx.init(al);
-    const iter = Iter(ByteArrayListCtx).init(iterable);
+    const iterable = ArrayListCtx(ByteArrayList).init(al);
+    const iter = Iter(ArrayListCtx(ByteArrayList)).init(iterable);
     var map = iter.map(test_utils.add_1).map(test_utils.add_2).take(2);
 
     try expect(map.next().? == 4);
