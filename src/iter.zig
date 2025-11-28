@@ -1,5 +1,7 @@
 const std = @import("std");
 const ByteArrayList = std.ArrayList(u8);
+const allocator = std.testing.allocator;
+const expect = std.testing.expect;
 
 fn CtxElement(ctx_type: type) type {
     const next_element_type = @typeInfo(@TypeOf(ctx_type.next)).@"fn".return_type.?;
@@ -77,4 +79,29 @@ pub fn Iter(ctx_t: type) type {
             return .{ .ctx = .{ .ctx = self.ctx, .n = n } };
         }
     };
+}
+
+test "basic" {
+    var al: ByteArrayList = ByteArrayList.init(allocator);
+    defer al.deinit();
+
+    try al.append(1);
+    try al.append(2);
+    try al.append(3);
+
+    const iterable = ByteArrayListCtx.init(al);
+    const iter = Iter(ByteArrayListCtx).init(iterable);
+    var map = iter.map(struct {
+        fn f(a: u8) u16 {
+            return a + 1;
+        }
+    }.f).map(struct {
+        fn f(a: u16) u32 {
+            return a + 1;
+        }
+    }.f).take(2);
+
+    try expect(map.next().? == 3);
+    try expect(map.next().? == 4);
+    try expect(map.next() == null);
 }
