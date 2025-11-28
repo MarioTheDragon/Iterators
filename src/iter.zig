@@ -1,7 +1,9 @@
 const std = @import("std");
 const ByteArrayList = std.ArrayList(u8);
+
 const allocator = std.testing.allocator;
 const expect = std.testing.expect;
+const test_utils = @import("test_utils.zig");
 
 fn CtxElement(ctx_type: type) type {
     const next_element_type = @typeInfo(@TypeOf(ctx_type.next)).@"fn".return_type.?;
@@ -11,24 +13,6 @@ fn CtxElement(ctx_type: type) type {
 fn CtxMappedElement(f_type: type) type {
     return @typeInfo(@typeInfo(f_type).pointer.child).@"fn".return_type.?;
 }
-
-pub const ByteArrayListCtx = struct {
-    data: ByteArrayList,
-    index: usize,
-
-    const Item = u8;
-
-    pub fn init(data: ByteArrayList) @This() {
-        return .{ .data = data, .index = 0 };
-    }
-
-    pub fn next(self: *@This()) ?u8 {
-        if (self.index == self.data.items.len) return null;
-        const ret = self.data.items[self.index];
-        self.index += 1;
-        return ret;
-    }
-};
 
 fn Map(ctx_type: type, f_type: type) type {
     return struct {
@@ -79,29 +63,4 @@ pub fn Iter(ctx_t: type) type {
             return .{ .ctx = .{ .ctx = self.ctx, .n = n } };
         }
     };
-}
-
-test "basic" {
-    var al: ByteArrayList = ByteArrayList.init(allocator);
-    defer al.deinit();
-
-    try al.append(1);
-    try al.append(2);
-    try al.append(3);
-
-    const iterable = ByteArrayListCtx.init(al);
-    const iter = Iter(ByteArrayListCtx).init(iterable);
-    var map = iter.map(struct {
-        fn f(a: u8) u16 {
-            return a + 1;
-        }
-    }.f).map(struct {
-        fn f(a: u16) u32 {
-            return a + 1;
-        }
-    }.f).take(2);
-
-    try expect(map.next().? == 3);
-    try expect(map.next().? == 4);
-    try expect(map.next() == null);
 }
