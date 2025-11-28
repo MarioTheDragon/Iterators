@@ -15,6 +15,10 @@ pub fn Iter(ctx_t: type) type {
             return .{ .ctx = data };
         }
 
+        pub fn deinit(self: *@This()) void {
+            self.ctx.deinit();
+        }
+
         pub fn next(self: *@This()) ?ctx_t.Item {
             return self.ctx.next();
         }

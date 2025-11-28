@@ -13,6 +13,10 @@ pub fn ArrayListCtx(array_list_type: type) type {
             return .{ .data = data, .index = 0 };
         }
 
+        pub fn deinit(self: *@This()) void {
+            self.data.deinit();
+        }
+
         pub fn next(self: *@This()) ?Item {
             if (self.index == self.data.items.len) return null;
             const ret = self.data.items[self.index];
