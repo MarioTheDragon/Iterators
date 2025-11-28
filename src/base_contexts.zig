@@ -7,7 +7,7 @@ pub fn ArrayListCtx(array_list_type: type) type {
         data: ArrayList(Inner),
         index: usize,
 
-        const Item = Inner;
+        pub const Item = Inner;
 
         pub fn init(data: ArrayList(Item)) @This() {
             return .{ .data = data, .index = 0 };
