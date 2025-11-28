@@ -5,7 +5,7 @@ pub fn ArrayListCtx(array_list_type: type) type {
 
     return struct {
         data: ArrayList(Inner),
-        index: usize,
+        index: usize = 0,
 
         pub const Item = Inner;
 

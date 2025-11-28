@@ -14,5 +14,5 @@ pub fn range(T: type, start: T, stop: T) !Iter(ArrayListCtx(ArrayList(T))) {
         if (start < stop) counter += 1 else counter -= 1;
     }
 
-    return Iter(ArrayListCtx(ArrayList(T))).init(ArrayListCtx(ArrayList(T)).init(list));
+    return .{ .ctx = .{ .data = list } };
 }
