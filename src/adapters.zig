@@ -1,18 +1,18 @@
 fn CtxElement(Ctx: type) type {
-    const next_element_type = @typeInfo(@TypeOf(Ctx.next)).@"fn".return_type.?;
-    return @typeInfo(next_element_type).optional.child;
+    const NextElement = @typeInfo(@TypeOf(Ctx.next)).@"fn".return_type.?;
+    return @typeInfo(NextElement).optional.child;
 }
 
 fn CtxMappedElement(F: type) type {
     return @typeInfo(@typeInfo(F).pointer.child).@"fn".return_type.?;
 }
 
-pub fn Map(ctx_type: type, f_type: type) type {
+pub fn Map(Ctx: type, F: type) type {
     return struct {
-        ctx: ctx_type,
-        apply: f_type,
+        ctx: Ctx,
+        apply: F,
 
-        pub const Item = CtxMappedElement(f_type);
+        pub const Item = CtxMappedElement(F);
 
         pub fn deinit(self: *@This()) void {
             self.ctx.deinit();
@@ -25,12 +25,12 @@ pub fn Map(ctx_type: type, f_type: type) type {
     };
 }
 
-pub fn Take(ctx_type: type) type {
+pub fn Take(Ctx: type) type {
     return struct {
-        ctx: ctx_type,
+        ctx: Ctx,
         n: usize,
 
-        pub const Item = CtxElement(ctx_type);
+        pub const Item = CtxElement(Ctx);
 
         pub fn deinit(self: *@This()) void {
             self.ctx.deinit();

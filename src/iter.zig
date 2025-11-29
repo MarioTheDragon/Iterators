@@ -6,11 +6,13 @@ const expect = std.testing.expect;
 
 const adapters = @import("adapters.zig");
 
-pub fn Iter(ctx_t: type) type {
+pub fn Iter(Ctx: type) type {
     return struct {
-        ctx: ctx_t,
+        ctx: Ctx,
 
-        pub fn init(data: ctx_t) @This() {
+        pub const Item = adapters.CtxElement(Ctx);
+
+        pub fn init(data: Ctx) @This() {
             return .{ .ctx = data };
         }
 
@@ -18,7 +20,7 @@ pub fn Iter(ctx_t: type) type {
             self.ctx.deinit();
         }
 
-        pub fn next(self: *@This()) ?ctx_t.Item {
+        pub fn next(self: *@This()) ?Ctx.Item {
             return self.ctx.next();
         }
 
