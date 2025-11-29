@@ -3,7 +3,6 @@ const ByteArrayList = std.ArrayList(u8);
 
 const allocator = std.testing.allocator;
 const expect = std.testing.expect;
-const test_utils = @import("test_utils.zig");
 
 const adapters = @import("adapters.zig");
 
