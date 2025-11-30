@@ -79,3 +79,19 @@ test "find" {
     const element2 = r2.find(greater_than_10);
     try expect(element2 == null);
 }
+
+test "collect" {
+    const r = try constructors.range(u8, 0, 5);
+    var collection = try r.collect(ArrayList(u8), allocator);
+    defer collection.deinit();
+
+    const expected_values = [_]u8{0, 1, 2, 3, 4};
+    var expected = ArrayList(u8).init(allocator);
+    defer expected.deinit();
+    try expected.appendSlice(expected_values[0..]);
+
+    try expect(collection.items.len == expected.items.len);
+    for (0..collection.items.len) |i| {
+        try expect(collection.items[i] == expected.items[i]);
+    }
+}

@@ -1,17 +1,10 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
 const allocator = std.heap.page_allocator;
+const name_starts_with = @import("utils.zig").name_starts_with;
 
 const Iter = @import("iter.zig").Iter;
 const ArrayListCtx = @import("base_contexts.zig").ArrayListCtx;
-
-fn name_starts_with(name1: []const u8, name2: []const u8) bool {
-    const min = if (name1.len < name2.len) name1.len else name2.len;
-    for (0..min) |i| {
-        if (name1[i] != name2[i]) return false;
-    }
-    return true;
-}
 
 fn BaseCtx(T: type) type {
     const type_name = @typeName(T);

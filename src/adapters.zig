@@ -1,11 +1,6 @@
-pub fn CtxItem(Ctx: type) type {
-    const NextElement = @typeInfo(@TypeOf(Ctx.next)).@"fn".return_type.?;
-    return @typeInfo(NextElement).optional.child;
-}
-
-pub fn CtxMappedItem(F: type) type {
-    return @typeInfo(@typeInfo(F).pointer.child).@"fn".return_type.?;
-}
+const utils = @import("utils.zig");
+const CtxItem = utils.CtxItem;
+const CtxMappedItem = utils.CtxMappedItem;
 
 pub fn Map(Ctx: type, F: type) type {
     return struct {
