@@ -21,6 +21,10 @@ pub fn divisible_by_2(n: u16) bool {
     return n % 2 == 0;
 }
 
+pub fn greater_than_10(n: u8) bool {
+    return n > 10;
+}
+
 test "basic" {
     const r = try constructors.range(u8, 1, 5);
     var iter = r.map(add_1).map(add_2).take(2);
@@ -64,4 +68,14 @@ test "filter" {
     try expect(iter.next().? == 10);
     try expect(iter.next().? == 12);
     try expect(iter.next() == null);
+}
+
+test "find" {
+    const r1 = try constructors.range(u8, 0, 20);
+    const element1 = r1.find(greater_than_10);
+    try expect(element1.? == 11);
+
+    const r2 = try constructors.range(u8, 0, 10);
+    const element2 = r2.find(greater_than_10);
+    try expect(element2 == null);
 }

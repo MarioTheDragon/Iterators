@@ -35,5 +35,15 @@ pub fn Iter(Ctx: type) type {
         pub fn filter(self: @This(), f: *const fn (@This().Item) bool) Iter(adapters.Filter(@TypeOf(self.ctx), @TypeOf(f))) {
             return .{ .ctx = .{ .ctx = self.ctx, .filter = f } };
         }
+
+        pub fn find(self: @This(), f: *const fn (@This().Item) bool) ?@This().Item {
+            var iter = self;
+            const ret = while (iter.next()) |element| {
+                if (f(element)) break element;
+            } else null;
+
+            iter.deinit();
+            return ret;
+        }
     };
 }
