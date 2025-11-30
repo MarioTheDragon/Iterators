@@ -1,10 +1,10 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
 const allocator = std.heap.page_allocator;
-const name_starts_with = @import("utils.zig").name_starts_with;
 
-const Iter = @import("iter.zig").Iter;
 const ArrayListCtx = @import("base_contexts.zig").ArrayListCtx;
+const Iter = @import("iter.zig").Iter;
+const name_starts_with = @import("utils.zig").name_starts_with;
 
 fn BaseCtx(T: type) type {
     const type_name = @typeName(T);

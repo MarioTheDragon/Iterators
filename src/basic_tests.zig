@@ -1,14 +1,13 @@
 const std = @import("std");
-const ByteArrayList = std.ArrayList(u8);
 const ArrayList = std.ArrayList;
-
 const allocator = std.testing.allocator;
 const expect = std.testing.expect;
 
 const ArrayListCtx = @import("base_contexts.zig").ArrayListCtx;
-const Iter = @import("iter.zig").Iter;
 const constructors = @import("constructors.zig");
+const Iter = @import("iter.zig").Iter;
 
+const ByteArrayList = std.ArrayList(u8);
 pub fn add_1(a: u8) u16 {
     return a + 1;
 }
