@@ -1,5 +1,4 @@
 const utils = @import("utils.zig");
-const CtxItem = utils.CtxItem;
 const CtxMappedItem = utils.CtxMappedItem;
 
 pub fn Map(Ctx: type, F: type) type {
@@ -25,7 +24,7 @@ pub fn Take(Ctx: type) type {
         ctx: Ctx,
         n: usize,
 
-        pub const Item = CtxItem(Ctx);
+        pub const Item = Ctx.Item;
 
         pub fn deinit(self: *@This()) void {
             self.ctx.deinit();
@@ -44,7 +43,7 @@ pub fn Filter(Ctx: type, F: type) type {
         ctx: Ctx,
         filter: F,
 
-        pub const Item = CtxItem(Ctx);
+        pub const Item = Ctx.Item;
 
         pub fn deinit(self: *@This()) void {
             self.ctx.deinit();

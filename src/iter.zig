@@ -2,15 +2,14 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 
 const adapters = @import("adapters.zig");
-const utils = @import("utils.zig");
-const name_starts_with = utils.name_starts_with;
-const CtxItem = utils.CtxItem;
+const consumers = @import("consumers.zig");
+const name_starts_with = @import("utils.zig").name_starts_with;
 
 pub fn Iter(Ctx: type) type {
     return struct {
         ctx: Ctx,
 
-        pub const Item = CtxItem(Ctx);
+        pub const Item = Ctx.Item;
 
         pub fn init(data: Ctx) @This() {
             return .{ .ctx = data };
@@ -37,31 +36,11 @@ pub fn Iter(Ctx: type) type {
         }
 
         pub fn find(self: @This(), f: *const fn (@This().Item) bool) ?@This().Item {
-            var iter = self;
-            defer iter.deinit();
-
-            while (iter.next()) |element| {
-                if (f(element)) return element;
-            }
-            return null;
+            return consumers.find(self, f);
         }
 
         pub fn collect(self: @This(), Collection: type, comptime allocator: ?Allocator) !Collection {
-            var iter = self;
-            defer iter.deinit();
-
-            const type_name = @typeName(Collection);
-
-            if (comptime name_starts_with(type_name, "array_list.ArrayListAligned")) {
-                const alloc = allocator orelse @compileError("Arraylist requires an allocator");
-                var collection = Collection.init(alloc);
-                while (iter.next()) |element| {
-                    try collection.append(element);
-                }
-                return collection;
-            } else {
-                @compileError("Type not supported");
-            }
+            return consumers.collect(self, Collection, allocator);
         }
     };
 }
