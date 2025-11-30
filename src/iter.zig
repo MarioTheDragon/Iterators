@@ -42,5 +42,9 @@ pub fn Iter(Ctx: type) type {
         pub fn collect(self: @This(), Collection: type, comptime allocator: ?Allocator) !Collection {
             return consumers.collect(self, Collection, allocator);
         }
+
+        pub fn count(self: @This()) usize {
+            return consumers.count(self);
+        }
     };
 }

@@ -85,7 +85,7 @@ test "collect" {
     var collection = try r.collect(ArrayList(u8), allocator);
     defer collection.deinit();
 
-    const expected_values = [_]u8{0, 1, 2, 3, 4};
+    const expected_values = [_]u8{ 0, 1, 2, 3, 4 };
     var expected = ArrayList(u8).init(allocator);
     defer expected.deinit();
     try expected.appendSlice(expected_values[0..]);
@@ -94,4 +94,11 @@ test "collect" {
     for (0..collection.items.len) |i| {
         try expect(collection.items[i] == expected.items[i]);
     }
+}
+
+test "count" {
+    const r1 = try constructors.range(u8, 0, 5);
+    try expect(r1.count() == 5);
+    const r2 = try constructors.range(u8, 0, 20);
+    try expect(r2.count() == 20);
 }

@@ -32,3 +32,14 @@ pub fn find(iterator: anytype, f: *const fn (@TypeOf(iterator).Item) bool) ?@Typ
     }
     return null;
 }
+
+pub fn count(iterator: anytype) usize {
+    var iter = iterator;
+    defer iter.deinit();
+
+    var counter: usize = 0;
+    while (iter.next()) |_| {
+        counter += 1;
+    }
+    return counter;
+}
