@@ -17,6 +17,10 @@ pub fn add_2(a: u16) u32 {
     return a + 2;
 }
 
+pub fn divisible_by_2(n: u16) bool {
+    return n % 2 == 0;
+}
+
 test "basic" {
     const r = try constructors.range(u8, 1, 5);
     var iter = r.map(add_1).map(add_2).take(2);
@@ -48,5 +52,16 @@ test "constructor with range as input" {
 
     try expect(iter.next().? == 4);
     try expect(iter.next().? == 5);
+    try expect(iter.next() == null);
+}
+
+test "filter" {
+    const r = try constructors.range(u8, 5, 10);
+    var iter = r.map(add_1).filter(divisible_by_2).map(add_2);
+    defer iter.deinit();
+
+    try expect(iter.next().? == 8);
+    try expect(iter.next().? == 10);
+    try expect(iter.next().? == 12);
     try expect(iter.next() == null);
 }

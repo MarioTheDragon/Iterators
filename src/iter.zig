@@ -10,7 +10,7 @@ pub fn Iter(Ctx: type) type {
     return struct {
         ctx: Ctx,
 
-        pub const Item = adapters.CtxElement(Ctx);
+        pub const Item = adapters.CtxItem(Ctx);
 
         pub fn init(data: Ctx) @This() {
             return .{ .ctx = data };
@@ -30,6 +30,10 @@ pub fn Iter(Ctx: type) type {
 
         pub fn take(self: @This(), n: usize) Iter(adapters.Take(@TypeOf(self.ctx))) {
             return .{ .ctx = .{ .ctx = self.ctx, .n = n } };
+        }
+
+        pub fn filter(self: @This(), f: *const fn (@This().Item) bool) Iter(adapters.Filter(@TypeOf(self.ctx), @TypeOf(f))) {
+            return .{ .ctx = .{ .ctx = self.ctx, .filter = f } };
         }
     };
 }

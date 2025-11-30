@@ -1,9 +1,9 @@
-fn CtxItem(Ctx: type) type {
+pub fn CtxItem(Ctx: type) type {
     const NextElement = @typeInfo(@TypeOf(Ctx.next)).@"fn".return_type.?;
     return @typeInfo(NextElement).optional.child;
 }
 
-fn CtxMappedItem(F: type) type {
+pub fn CtxMappedItem(F: type) type {
     return @typeInfo(@typeInfo(F).pointer.child).@"fn".return_type.?;
 }
 
@@ -40,6 +40,26 @@ pub fn Take(Ctx: type) type {
             if (self.n == 0) return null;
             self.n -= 1;
             return self.ctx.next();
+        }
+    };
+}
+
+pub fn Filter(Ctx: type, F: type) type {
+    return struct {
+        ctx: Ctx,
+        filter: F,
+
+        pub const Item = CtxItem(Ctx);
+
+        pub fn deinit(self: *@This()) void {
+            self.ctx.deinit();
+        }
+
+        pub fn next(self: *@This()) ?Item {
+            while (true) {
+                const next_element = self.ctx.next() orelse return null;
+                if (self.filter(next_element)) return next_element;
+            }
         }
     };
 }
