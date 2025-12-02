@@ -39,6 +39,10 @@ pub fn Iter(Ctx: type) type {
             return .{ .ctx = .{ .ctx = self.ctx, .filter = f } };
         }
 
+        pub fn chain(self: @This(), chain_ctx: anytype) Iter(adapters.Chain(@TypeOf(self.ctx), @TypeOf(chain_ctx))) {
+            return .{ .ctx = .{ .ctx = self.ctx, .chain_ctx = chain_ctx } };
+        }
+
         pub fn find(self: @This(), f: *const fn (@This().Item) bool) ?@This().Item {
             return consumers.find(self, f);
         }

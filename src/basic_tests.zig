@@ -124,3 +124,18 @@ test "clone" {
     try expect(iter_clone.next() == null);
     try expect(another_iter_clone.next() == null);
 }
+
+test "chain" {
+    const iter1 = try constructors.range(u8, 5, 7);
+    const iter2 = try constructors.range(u8, 0, 2);
+
+    var chained_iter = iter1.chain(iter2);
+    defer chained_iter.deinit();
+
+    try expect(chained_iter.next().? == 5);
+    try expect(chained_iter.next().? == 6);
+    try expect(chained_iter.next().? == 0);
+    try expect(chained_iter.next().? == 1);
+    try expect(chained_iter.next() == null);
+
+}

@@ -64,3 +64,25 @@ pub fn Filter(Ctx: type, F: type) type {
         }
     };
 }
+
+pub fn Chain(Ctx: type, ChainCtx: type) type {
+    return struct {
+        ctx: Ctx,
+        chain_ctx: ChainCtx,
+
+        pub const Item = Ctx.Item;
+
+        pub fn deinit(self: *@This()) void {
+            self.ctx.deinit();
+            self.chain_ctx.deinit();
+        }
+
+        pub fn clone(self: *@This()) !@This() {
+            return .{ .ctx = try self.ctx.clone(), .chain_ctx = try self.chain_ctx.clone() };
+        }
+
+        pub fn next(self: *@This()) ?Item {
+            return self.ctx.next() orelse self.chain_ctx.next();
+        }
+    };
+}
