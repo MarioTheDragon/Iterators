@@ -101,3 +101,26 @@ test "count" {
     const r2 = try constructors.range(u8, 0, 20);
     try expect(r2.count() == 20);
 }
+
+test "clone" {
+    const r = try constructors.range(u8, 5, 8);
+    var iter = r.map(add_1).filter(divisible_by_2).map(add_2);
+    defer iter.deinit();
+
+    var iter_clone = try iter.clone();
+    defer iter_clone.deinit();
+
+    try expect(iter.next().? == 8);
+    try expect(iter_clone.next().? == 8);
+
+    var another_iter_clone = try iter.clone();
+    defer another_iter_clone.deinit();
+
+    try expect(iter.next().? == 10);
+    try expect(iter_clone.next().? == 10);
+    try expect(another_iter_clone.next().? == 10);
+
+    try expect(iter.next() == null);
+    try expect(iter_clone.next() == null);
+    try expect(another_iter_clone.next() == null);
+}

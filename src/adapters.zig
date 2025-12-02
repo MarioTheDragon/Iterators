@@ -13,6 +13,10 @@ pub fn Map(Ctx: type, F: type) type {
         pub const Item = CtxMappedItem(F);
         pub const deinit = default_deinit;
 
+        pub fn clone(self: *@This()) !@This() {
+            return .{ .ctx = try self.ctx.clone(), .apply = self.apply };
+        }
+
         pub fn next(self: *@This()) ?Item {
             const next_element = self.ctx.next() orelse return null;
             return self.apply(next_element);
@@ -27,6 +31,10 @@ pub fn Take(Ctx: type) type {
 
         pub const Item = Ctx.Item;
         pub const deinit = default_deinit;
+
+        pub fn clone(self: *@This()) !@This() {
+            return .{ .ctx = try self.ctx.clone(), .n = self.n };
+        }
 
         pub fn next(self: *@This()) ?Item {
             if (self.n == 0) return null;
@@ -43,6 +51,10 @@ pub fn Filter(Ctx: type, F: type) type {
 
         pub const Item = Ctx.Item;
         pub const deinit = default_deinit;
+
+        pub fn clone(self: *@This()) !@This() {
+            return .{ .ctx = try self.ctx.clone(), .filter = self.filter };
+        }
 
         pub fn next(self: *@This()) ?Item {
             while (true) {

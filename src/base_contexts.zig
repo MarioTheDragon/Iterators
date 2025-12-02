@@ -17,6 +17,10 @@ pub fn ArrayListCtx(array_list_type: type) type {
             self.data.deinit();
         }
 
+        pub fn clone(self: *@This()) !@This() {
+            return .{ .data = try self.data.clone(), .index = self.index };
+        }
+
         pub fn next(self: *@This()) ?Item {
             if (self.index == self.data.items.len) return null;
             const ret = self.data.items[self.index];

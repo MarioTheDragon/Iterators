@@ -19,6 +19,10 @@ pub fn Iter(Ctx: type) type {
             self.ctx.deinit();
         }
 
+        pub fn clone(self: *@This()) !@This() {
+            return .{ .ctx = try self.ctx.clone() };
+        }
+
         pub fn next(self: *@This()) ?Ctx.Item {
             return self.ctx.next();
         }
