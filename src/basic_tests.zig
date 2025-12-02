@@ -48,7 +48,7 @@ test "array_list constructor" {
 
 // This test is done to see if the constructor takes the type itself as context, if it has the
 // necessary declarations.
-test "constructor with range as input" {
+test "range" {
     const r = try constructors.range(u8, 1, 5);
     var iter = constructors.iter(r).map(add_1).map(add_2).take(2);
     defer iter.deinit();
@@ -56,6 +56,12 @@ test "constructor with range as input" {
     try expect(iter.next().? == 4);
     try expect(iter.next().? == 5);
     try expect(iter.next() == null);
+
+    var empty = try constructors.range(u8, 0, 0);
+    defer empty.deinit();
+
+    try expect(empty.next() == null);
+    try expect(empty.next() == null);
 }
 
 test "filter" {
@@ -138,4 +144,22 @@ test "chain" {
     try expect(chained_iter.next().? == 1);
     try expect(chained_iter.next() == null);
 
+}
+
+test "cycle" {
+    const iter = try constructors.range(u8, 0, 2);
+    var cycle = iter.cycle();
+    defer cycle.deinit();
+
+    try expect(try cycle.next().? == 0);
+    try expect(try cycle.next().? == 1);
+    try expect(try cycle.next().? == 0);
+    try expect(try cycle.next().? == 1);
+
+    const empty = try constructors.range(u8, 0, 0);
+    var empty_cycle = empty.cycle();
+    defer empty_cycle.deinit();
+
+    try expect(empty_cycle.next() == null);
+    try expect(empty_cycle.next() == null);
 }

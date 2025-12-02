@@ -43,6 +43,10 @@ pub fn Iter(Ctx: type) type {
             return .{ .ctx = .{ .ctx = self.ctx, .chain_ctx = chain_ctx } };
         }
 
+        pub fn cycle(self: @This()) Iter(adapters.Cycle(@TypeOf(self.ctx))) {
+            return .{ .ctx = .{ .ctx = self.ctx, .cloned_ctx = null } };
+        }
+
         pub fn find(self: @This(), f: *const fn (@This().Item) bool) ?@This().Item {
             return consumers.find(self, f);
         }
